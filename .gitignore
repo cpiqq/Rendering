@@ -1,0 +1,8 @@
+Rendering/Library
+Rendering/Temp
+Rendering/obj
+Rendering/Logs
+Rendering/Assets/Plugins/Editor/JetBrains
+Rendering/.idea
+Assembly-CSharp.csproj
+Rendering.sln

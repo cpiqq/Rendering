@@ -33,10 +33,12 @@ Shader "custom/My First Lighting Shader" {
                 // i.uv = v.uv * _MainTex_ST.xy + _MainTex_ST.zw; //用TRANSFORM_TEX 代替
                 i.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 i.position = UnityObjectToClipPos(v.position);
-				i.normal = v.normal;
+				i.normal = UnityObjectToWorldNormal(v.normal);
+                i.normal = normalize(i.normal);
                 return i;
             }
             float4 frag(Interpolators i) : SV_TARGET{
+                i.normal = normalize(i.normal);
 				return float4(i.normal * 0.5 + 0.5, 1);
             }
             ENDCG

@@ -39,7 +39,8 @@ Shader "custom/My First Lighting Shader" {
             }
             float4 frag(Interpolators i) : SV_TARGET{
                 i.normal = normalize(i.normal);
-				return float4(i.normal * 0.5 + 0.5, 1);
+				// return float4(i.normal * 0.5 + 0.5, 1);
+                return  dot(float3(0,1,0), i.normal);
             }
             ENDCG
         }

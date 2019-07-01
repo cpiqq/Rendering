@@ -40,8 +40,9 @@ Shader "custom/My First Lighting Shader" {
             }
             float4 frag(Interpolators i) : SV_TARGET{
                 i.normal = normalize(i.normal);
+                float3 lightDir = _WorldSpaceLightPos0;
 				// return float4(i.normal * 0.5 + 0.5, 1);
-                return  DotClamped(float3(0,1,0), i.normal);
+                return  DotClamped(lightDir, i.normal);
             }
             ENDCG
         }

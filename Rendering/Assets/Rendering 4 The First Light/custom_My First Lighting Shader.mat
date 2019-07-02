@@ -23,7 +23,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Smoothness: 0.091
+    - _Metallic: 0.79
+    - _Smoothness: 0.833
     m_Colors:
     - _SpecularTint: {r: 0.9056604, g: 0.35457456, b: 0.35457456, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

@@ -5,7 +5,8 @@ Shader "custom/My First Lighting Shader" {
         _Tint("_Tint", Color)  = (1,1,1,1)
         _MainTex("_MainTex", 2D) = "white"{}
 		_Smoothness("_Smoothness", Range(0,1)) = 0.5
-        _SpecularTint("_SpecularTint", Color) = (0.5, 0.5, 0.5, 1)
+        // _SpecularTint("_SpecularTint", Color) = (0.5, 0.5, 0.5, 1)
+        [Gamma]_Metallic ("_Metallic", Range(0, 1)) = 0
     }
     Subshader{
         Pass{
@@ -31,10 +32,11 @@ Shader "custom/My First Lighting Shader" {
 				float3 worldPos : TEXCOORD2;
             };
 
-            float4 _Tint, _SpecularTint;
+            float4 _Tint/* _SpecularTint*/;
             sampler2D _MainTex;
             float4 _MainTex_ST;
-			float _Smoothness;
+			float _Smoothness, _Metallic;
+
 
             Interpolators vert(VertexData v) {
                 Interpolators i;
@@ -51,17 +53,18 @@ Shader "custom/My First Lighting Shader" {
 				float3 lightColor = _LightColor0.rgb;
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
 				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
-				// float3 reflectDir = reflect(-lightDir, i.normal);
-				float3 halfDir = normalize(lightDir + viewDir);
-
-                float3 specular = _SpecularTint.rgb * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
-
-				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
-                // albedo *= 1 - max(_SpecularTint.r, max(_SpecularTint.g, _SpecularTint.b));
-                float oneMinusReflectivity;
-                albedo = EnergyConservationBetweenDiffuseAndSpecular(albedo, _SpecularTint.rgb, oneMinusReflectivity);
                 
+                float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
+                float3 specularTint; // = albedo * _Metallic;
+                float oneMinusReflectivity; // = 1 - _Metallic;
+                // albedo *= oneMinusReflectivity;
+                albedo = DiffuseAndSpecularFromMetallic(albedo, _Metallic, specularTint, oneMinusReflectivity);
+
+
                 float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);
+				float3 halfDir = normalize(lightDir + viewDir);
+                float3 specular = specularTint * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
+
                 return  float4(diffuse + specular, 1);
             }
             ENDCG

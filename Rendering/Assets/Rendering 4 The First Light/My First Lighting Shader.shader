@@ -12,12 +12,15 @@ Shader "custom/My First Lighting Shader" {
         Pass{
             Tags{"LightMode" = "ForwardBase" }
             CGPROGRAM
+            #pragma target 3.0
             #pragma vertex vert
             #pragma fragment frag
             // #include "UnityCG.cginc"
             // 含有 UnityCG.cginc， 并定义了 DotClamped()，分情况的使用max或saturate
-            #include "UnityStandardBRDF.cginc" 
-            #include "UnityStandardUtils.cginc"
+            // #include "UnityStandardBRDF.cginc" 
+            // #include "UnityStandardUtils.cginc"
+
+            #include "UnityPBSLighting.cginc"
 
             struct VertexData{
                 float4 position : POSITION;
@@ -61,11 +64,22 @@ Shader "custom/My First Lighting Shader" {
                 albedo = DiffuseAndSpecularFromMetallic(albedo, _Metallic, specularTint, oneMinusReflectivity);
 
 
-                float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);
-				float3 halfDir = normalize(lightDir + viewDir);
-                float3 specular = specularTint * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
+                // float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);
+				// float3 halfDir = normalize(lightDir + viewDir);
+                // float3 specular = specularTint * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
 
-                return  float4(diffuse + specular, 1);
+                // return  float4(diffuse + specular, 1);
+
+                UnityLight light;
+                light.color = lightColor;
+                light.dir = lightDir;
+                light.ndotl = DotClamped(i.normal, lightDir);
+
+                UnityIndirect indirectLight;
+                indirectLight.diffuse = 0;
+                indirectLight.specular = 0;
+
+                return UNITY_BRDF_PBS(albedo, specularTint, oneMinusReflectivity, _Smoothness, i.normal, viewDir, light, indirectLight);
             }
             ENDCG
         }

@@ -54,12 +54,11 @@ Shader "custom/My First Lighting Shader" {
 				float3 halfDir = normalize(lightDir + viewDir);
 
                 float3 specular = _SpecularTint.rgb * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
-				return float4(specular, 1);
 
 				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
 
                 float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);
-                return  float4(diffuse, 1);
+                return  float4(diffuse + specular, 1);
             }
             ENDCG
         }

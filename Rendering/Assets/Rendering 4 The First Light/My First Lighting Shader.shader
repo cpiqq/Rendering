@@ -5,6 +5,7 @@ Shader "custom/My First Lighting Shader" {
         _Tint("_Tint", Color)  = (1,1,1,1)
         _MainTex("_MainTex", 2D) = "white"{}
 		_Smoothness("_Smoothness", Range(0,1)) = 0.5
+        _SpecularTint("_SpecularTint", Color) = (0.5, 0.5, 0.5, 1)
     }
     Subshader{
         Pass{
@@ -13,7 +14,8 @@ Shader "custom/My First Lighting Shader" {
             #pragma vertex vert
             #pragma fragment frag
             // #include "UnityCG.cginc"
-            #include "UnityStandardBRDF.cginc" // 含有 UnityCG.cginc， 并定义了 DotClamped()，分情况的使用max或saturate
+            // 含有 UnityCG.cginc， 并定义了 DotClamped()，分情况的使用max或saturate
+            #include "UnityStandardBRDF.cginc" 
 
             struct VertexData{
                 float4 position : POSITION;
@@ -28,7 +30,7 @@ Shader "custom/My First Lighting Shader" {
 				float3 worldPos : TEXCOORD2;
             };
 
-            float4 _Tint;
+            float4 _Tint, _SpecularTint;
             sampler2D _MainTex;
             float4 _MainTex_ST;
 			float _Smoothness;
@@ -45,14 +47,15 @@ Shader "custom/My First Lighting Shader" {
             }
             float4 frag(Interpolators i) : SV_TARGET{
                 i.normal = normalize(i.normal);
+				float3 lightColor = _LightColor0.rgb;
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
 				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
 				// float3 reflectDir = reflect(-lightDir, i.normal);
 				float3 halfDir = normalize(lightDir + viewDir);
 
-				return pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
+                float3 specular = _SpecularTint.rgb * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
+				return float4(specular, 1);
 
-				float3 lightColor = _LightColor0.rgb;
 				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
 
                 float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);

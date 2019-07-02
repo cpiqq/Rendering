@@ -25,5 +25,5 @@ Material:
     m_Floats:
     - _Smoothness: 0.091
     m_Colors:
-    - _SpecularTint: {r: 1, g: 0.18396229, b: 0.18396229, a: 1}
+    - _SpecularTint: {r: 0.9056604, g: 0.35457456, b: 0.35457456, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

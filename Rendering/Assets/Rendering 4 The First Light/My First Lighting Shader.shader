@@ -4,6 +4,7 @@ Shader "custom/My First Lighting Shader" {
     Properties{
         _Tint("_Tint", Color)  = (1,1,1,1)
         _MainTex("_MainTex", 2D) = "white"{}
+		_Smoothness("_Smoothness", Range(0,1)) = 0.5
     }
     Subshader{
         Pass{
@@ -30,6 +31,7 @@ Shader "custom/My First Lighting Shader" {
             float4 _Tint;
             sampler2D _MainTex;
             float4 _MainTex_ST;
+			float _Smoothness;
 
             Interpolators vert(VertexData v) {
                 Interpolators i;
@@ -46,7 +48,7 @@ Shader "custom/My First Lighting Shader" {
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
 				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
 				float3 reflectDir = reflect(-lightDir, i.normal);
-				return DotClamped(viewDir, reflectDir);
+				return pow(DotClamped(viewDir, reflectDir), _Smoothness * 100);
 
 				float3 lightColor = _LightColor0.rgb;
 				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;

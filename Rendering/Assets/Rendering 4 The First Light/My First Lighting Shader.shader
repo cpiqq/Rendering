@@ -47,8 +47,10 @@ Shader "custom/My First Lighting Shader" {
                 i.normal = normalize(i.normal);
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
 				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
-				float3 reflectDir = reflect(-lightDir, i.normal);
-				return pow(DotClamped(viewDir, reflectDir), _Smoothness * 100);
+				// float3 reflectDir = reflect(-lightDir, i.normal);
+				float3 halfDir = normalize(lightDir + viewDir);
+
+				return pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
 
 				float3 lightColor = _LightColor0.rgb;
 				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;

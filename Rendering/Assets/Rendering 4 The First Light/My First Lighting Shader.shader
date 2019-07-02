@@ -16,6 +16,7 @@ Shader "custom/My First Lighting Shader" {
             // #include "UnityCG.cginc"
             // 含有 UnityCG.cginc， 并定义了 DotClamped()，分情况的使用max或saturate
             #include "UnityStandardBRDF.cginc" 
+            #include "UnityStandardUtils.cginc"
 
             struct VertexData{
                 float4 position : POSITION;
@@ -56,7 +57,10 @@ Shader "custom/My First Lighting Shader" {
                 float3 specular = _SpecularTint.rgb * lightColor * pow(DotClamped(i.normal, halfDir), _Smoothness * 100);
 
 				float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
-                albedo *= 1 - max(_SpecularTint.r, max(_SpecularTint.g, _SpecularTint.b));
+                // albedo *= 1 - max(_SpecularTint.r, max(_SpecularTint.g, _SpecularTint.b));
+                float oneMinusReflectivity;
+                albedo = EnergyConservationBetweenDiffuseAndSpecular(albedo, _SpecularTint.rgb, oneMinusReflectivity);
+                
                 float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);
                 return  float4(diffuse + specular, 1);
             }

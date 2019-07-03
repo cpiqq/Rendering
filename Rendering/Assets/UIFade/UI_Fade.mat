@@ -26,7 +26,7 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _InOut: 0
-    - _Offset: 0.73917997
+    - _Offset: 0.8522921
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0

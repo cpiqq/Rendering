@@ -36,7 +36,7 @@ Interpolators vert(VertexData v) {
 UnityLight CreateLight(Interpolators i){
     UnityLight light;
     
-    #if defined(POINT)
+    #if defined(POINT) || defined(SPOT)
         light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);// 点光源的话得算一下 lightDir
     #else
         light.dir = _WorldSpaceLightPos0.xyz;

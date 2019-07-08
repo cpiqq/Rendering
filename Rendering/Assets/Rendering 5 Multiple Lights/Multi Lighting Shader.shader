@@ -31,7 +31,7 @@ Shader "custom/Multi Lighting Shader" {
             CGPROGRAM
             #pragma target 3.0
             
-            #pragma multi_compile DIRECTIONAL POINT 
+            #pragma multi_compile DIRECTIONAL DIRECTIONAL_COOKIE POINT SPOT
 
             #pragma vertex vert
             #pragma fragment frag

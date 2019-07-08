@@ -35,7 +35,9 @@ Interpolators vert(VertexData v) {
 UnityLight CreateLight(Interpolators i){
     UnityLight light;
     light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);// 点光源的话得算一下 lightDir
-    light.color = _LightColor0.rgb;
+    float3 lightVec = _WorldSpaceLightPos0.xyz - i.worldPos;
+    float attenuation = 1 / (1 + dot(lightVec, lightVec)); // 点光源得衰减 1/(d的平方) ，加1为了避免距离趋近0时衰减值趋近无限大
+    light.color = _LightColor0.rgb * attenuation; //把点光源得衰减计算在内
     light.ndotl = DotClamped(i.normal, light.dir);
     return light;
 }

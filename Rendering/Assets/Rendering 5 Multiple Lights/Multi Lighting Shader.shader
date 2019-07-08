@@ -18,7 +18,6 @@ Shader "custom/Multi Lighting Shader" {
             #pragma fragment frag
             
             #include "My Lighting.cginc"
-
             
             ENDCG
         }

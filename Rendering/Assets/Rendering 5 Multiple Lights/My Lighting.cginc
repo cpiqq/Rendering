@@ -34,7 +34,7 @@ Interpolators vert(VertexData v) {
 }
 UnityLight CreateLight(Interpolators i){
     UnityLight light;
-    light.dir = _WorldSpaceLightPos0.xyz;
+    light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);// 点光源的话得算一下 lightDir
     light.color = _LightColor0.rgb;
     light.ndotl = DotClamped(i.normal, light.dir);
     return light;

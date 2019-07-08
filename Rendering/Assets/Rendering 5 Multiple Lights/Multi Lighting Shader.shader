@@ -30,11 +30,12 @@ Shader "custom/Multi Lighting Shader" {
 
             CGPROGRAM
             #pragma target 3.0
+            
+            #pragma multi_compile DIRECTIONAL POINT 
+
             #pragma vertex vert
             #pragma fragment frag
             
-            #define POINT //这个pass只处理点光源，My Lighting.cginc 里涉及到了点光源得衰减和范围
-
             #include "My Lighting.cginc"
 
             

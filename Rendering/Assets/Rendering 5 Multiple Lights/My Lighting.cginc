@@ -35,11 +35,12 @@ Interpolators vert(VertexData v) {
 }
 UnityLight CreateLight(Interpolators i){
     UnityLight light;
-    light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);// 点光源的话得算一下 lightDir
-
-    //已经不需要自己计算attenuation了
-    // float3 lightVec = _WorldSpaceLightPos0.xyz - i.worldPos;
-    // float attenuation = 1 / (1 + dot(lightVec, lightVec)); // 点光源得衰减 1/(d的平方) ，加1为了避免距离趋近0时衰减值趋近无限大
+    
+    #if defined(POINT)
+        light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);// 点光源的话得算一下 lightDir
+    #else
+        light.dir = _WorldSpaceLightPos0.xyz;
+    #endif
 
     //unity内置得代替自己计算
     UNITY_LIGHT_ATTENUATION(attenuation, 0, i.worldPos);//attenuation 是已经被声明了得在AutoLight.cginc

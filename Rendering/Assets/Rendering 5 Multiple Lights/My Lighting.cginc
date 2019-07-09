@@ -21,7 +21,7 @@ struct Interpolators{
 };
 
 float4 _Tint/* _SpecularTint*/;
-sampler2D _MainTex;
+sampler2D _MainTex, _HeightMap;
 float4 _MainTex_ST;
 float _Smoothness, _Metallic;
 
@@ -75,7 +75,7 @@ UnityIndirect CreateIndirectLight(Interpolators i)
     #if defined(FORWARD_BASE_PASS)
     indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
     #endif
-    
+
     return indirectLight;
 }
 
@@ -84,6 +84,8 @@ float4 frag(Interpolators i) : SV_TARGET{
     float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
     
     float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;
+    albedo *= tex2D(_HeightMap, i.uv);
+    
     float3 specularTint; // = albedo * _Metallic;
     float oneMinusReflectivity; // = 1 - _Metallic;
     // albedo *= oneMinusReflectivity;

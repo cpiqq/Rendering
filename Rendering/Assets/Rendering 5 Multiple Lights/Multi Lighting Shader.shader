@@ -17,6 +17,8 @@ Shader "custom/Multi Lighting Shader" {
             #pragma vertex vert
             #pragma fragment frag
             
+            #define FORWARD_BASE_PASS
+            
             #include "My Lighting.cginc"
             
             ENDCG

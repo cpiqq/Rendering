@@ -22,7 +22,7 @@ struct Interpolators{
 
 float4 _Tint/* _SpecularTint*/;
 sampler2D _MainTex, _HeightMap;
-float4 _MainTex_ST;
+float4 _MainTex_ST, _HeightMap_TexelSize;
 float _Smoothness, _Metallic;
 
 void ComputeVertexLightColor(inout Interpolators i)
@@ -80,15 +80,18 @@ UnityIndirect CreateIndirectLight(Interpolators i)
 }
 void initFragNormal(inout Interpolators i)
 {
-    float h = tex2D(_HeightMap, i.uv).r;
-    i.normal = float3(0,h,0);
+    float2 delta = float2(_HeightMap_TexelSize.x, 0);
+    float h1 = tex2D(_HeightMap, i.uv).r;
+    float h2 = tex2D(_HeightMap, i.uv + delta);
+	i.normal = float3(h1 -h2, 1, 0);
+
     i.normal = normalize(i.normal);
 
 }
 
 float4 frag(Interpolators i) : SV_TARGET{
     initFragNormal(i);
-    
+
     float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos);
     
     float3 albedo = tex2D(_MainTex, i.uv).rgb * _Tint.rgb;

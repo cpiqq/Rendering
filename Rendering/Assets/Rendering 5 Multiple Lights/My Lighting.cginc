@@ -80,8 +80,8 @@ UnityIndirect CreateIndirectLight(Interpolators i)
 }
 void initFragNormal(inout Interpolators i)
 {
-    float2 delta = float2(_HeightMap_TexelSize.x, 0);
-    float h1 = tex2D(_HeightMap, i.uv).r;
+    float2 delta = float2(_HeightMap_TexelSize.x * 0.5, 0);
+    float h1 = tex2D(_HeightMap, i.uv - delta).r;
     float h2 = tex2D(_HeightMap, i.uv + delta);
 	i.normal = float3(h1 -h2, 1, 0);
 

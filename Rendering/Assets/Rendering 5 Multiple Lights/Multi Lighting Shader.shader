@@ -7,7 +7,7 @@ Shader "custom/Multi Lighting Shader" {
 		_Smoothness("_Smoothness", Range(0,1)) = 0.5
         // _SpecularTint("_SpecularTint", Color) = (0.5, 0.5, 0.5, 1)
         [Gamma]_Metallic ("_Metallic", Range(0, 1)) = 0
-        [NoScaleOffset]_HeightMap("_HeightMap", 2D) = "gray"{}
+        [NoScaleOffset]_NormalMap("_NormalMap", 2D) = "bump"{}
     }
     Subshader{
         Pass{
